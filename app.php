@@ -19,11 +19,13 @@
 		//if it's empty
 		if(empty($_GET["name"])){
 			echo "Please, enter the name of the recipient!"."<br>"; //it is empty
+			$everything_was_okay = false;
 		}else{
 			echo "Name: ".$_GET["name"]."<br>"; //its not empty
 		}
 	}else{
 		echo "There is no such thing as name";
+		$everything_was_okay = false;
 		
 	}
 	if(isset($_GET["from"])) {
@@ -89,7 +91,7 @@
 		//4 database
 		$mysql = new mysqli("localhost", $db_username, $db_password, "webpr2016_nicole");
 		
-		$stmt = $mysql->prepare("INSERT INTO messages_sample(recipient, message, created) VALUES(?,?,?)");
+		$stmt = $mysql->prepare("INSERT INTO messages_sample(recipient, message, sender) VALUES(?,?,?)");
 		
 		//echo error
 		echo $mysql->error;
@@ -100,7 +102,7 @@
 		// d - decimal, floatval
 		
 		// for each question mark its type with one letter
-		$stmt->bind_param("ss", $_GET["name"], $_GET["message"], $_GET["from"]);
+		$stmt->bind_param("sss", $_GET["name"], $_GET["message"], $_GET["from"]);
 		
 		//save
 		if($stmt->execute()){
